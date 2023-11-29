@@ -1,3 +1,5 @@
+# import CountryCode from iso_enums.graphql
+
 type SPF_ExternalID {
     names: String!
     id: String!
@@ -10,8 +12,8 @@ type SPF_ExternalUrl {
 
 type SPF_Image {
     url: String!
-    width: int!
-    height: int!
+    width: int
+    height: int
 }
 
 type SPF_Copyright {
@@ -76,11 +78,13 @@ type SPF_Album {
     popularity: int!
 }
 
+union SPF_PlaylistItem = SPF_Track | SPF_Episode
+
 type SPF_PlaylistTrack {
     added: String
     by: SPF_User
     is_local: Boolean
-    tracks: [SPF_Track | SPF_Episode]
+    tracks: [SPF_PlaylistItem]
 }
 
 type SPF_User {
@@ -112,13 +116,44 @@ type SPF_Playlist {
 }
 
 type SPF_Show {
-
+    markets: [CountryCode]!
+    copyrights: [SPF_Copyright]!
+    description: String!
+    html_description: String!
+    explicit: Boolean!
+    external_urls: [external_urls]!
+    href: String!
+    id: String!
+    images: [SPF_Image]!
+    externally_hosted: Boolean!
+    languages: [LanguageCode]!
+    media_type: String!
+    name: String!
+    publisher: String!
+    type: String!
+    uri: String!
+    total_episodes: Int!
+    episodes: [SPF_Episode]!
 }
 
 type SPF_Episode {
-
-}
-
-type SPF_AudioBook {
+    preview_url: String
+    description: String!
+    html_description: String!
+    duration: Int!
+    explicit: Boolean!
+    href: String
+    id: String
+    images: [SPF_Image]!
+    externally_hosted: Boolean!
+    playable: Boolean!
+    languages: [LanguageCode]!
+    name: String!
+    release: String!
+    release_specific: String!
+    type: String!
+    uri: String!
+    restrictions: [String]
+    show: SPF_Show
 
 }

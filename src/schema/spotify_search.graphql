@@ -1,74 +1,25 @@
-#import SPF_Track from 'spotify_objects.graphql'
-#import SPF_Artist from 'spotify_objects.graphql'
-#import SPF_Album from 'spotify_objects.graphql'
-#import SPF_Playlist from 'spotify_objects.graphql'
-#import SPF_Show from 'spotify_objects.graphql'
-#import SPF_Episode from 'spotify_objects.graphql'
-#import SPF_AudioBook from 'spotify_objects.graphql'
+# import SPF_Track from 'spotify_objects.graphql'
+# import SPF_Artist from 'spotify_objects.graphql'
+# import SPF_Album from 'spotify_objects.graphql'
+# import SPF_Playlist from 'spotify_objects.graphql'
 
-union SearchableSPFObject = SPF_Track | SPF_Artist | SPF_Album | SPF_Playlist 
+union SPF_SearchableItem = SPF_Track | SPF_Artist | SPF_Album | SPF_Playlist 
 
 type SPF_SearchResult {
-    tracks: [SPF_TracksSearch]
-    artist: [SPF_ArtistSearch]
-    album: [SPF_AlbumsSearch]
-    playlists: [SPF_PlaylistSearch]
-    shows: [SPF_ShowSearch]
-    episodes: [SPF_EpisodeSearch]
-    audiobooks: [SPF_AudioBookSearch]
+    tracks: [SPF_Search]
+    artist: [SPF_Search]
+    album: [SPF_Search]
+    playlists: [SPF_Search]
+    shows: [SPF_Search]
+    episodes: [SPF_Search]
+    audiobooks: [SPF_Search]
 }
 
 type SPF_Search {
     limit: int!
     offset: int!
     total: int!
-}
-
-type SPF_TracksSearch {
-    search: Search
-    next: TracksSearch
-    prev: TracksSearch
-    items: [Track]!
-}
-
-type SPF_ArtistSearch {
-    search: Search
-    next: ArtistSearch
-    prev: ArtistSearch
-    items: [Artist]!
-}
-
-type SPF_AlbumsSearch {
-    search: Search
-    next: AlbumsSearch
-    prev: AlbumsSearch
-    items: [Album]!
-}
-
-type SPF_PlaylistSearch {
-    search: Search
-    next: PlaylistSearch
-    prev: PlaylistSearch
-    items: [Playlist]!
-}
-
-type SPF_ShowSearch {
-    search: Search
-    next: ShowSearch
-    prev: ShowSearch
-    items: [Show]!
-}
-
-type SPF_EpisodeSearch {
-    search: Search
-    next: EpisodeSearch
-    prev: EpisodeSearch
-    items: [Episode]!
-}
-
-type SPF_AudioBookSearch {
-    search: Search
-    next: AudioBookSearch
-    prev: AudioBookSearch
-    items: [AudioBook]!
+    next: SPF_Search
+    prev: SPF_Search
+    items: [SPF_SearchableItem]
 }
