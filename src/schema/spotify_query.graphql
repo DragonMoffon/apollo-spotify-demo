@@ -1,5 +1,4 @@
-# import SPF_SearchResult from spotify_search.graphql
-
 type Query {
-    SPF_search_for_item(query: String!, types: [String]!, market: String, limit: int, offset: int, include_external: Boolean): SPF_SearchResult
+    SPF_search_for_item(query: String!, types: [String]!, market: String, limit: Int, offset: Int, include_external: Boolean): SPF_SearchResult!
 }
+

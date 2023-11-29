@@ -1,8 +1,3 @@
-# import SPF_Track from 'spotify_objects.graphql'
-# import SPF_Artist from 'spotify_objects.graphql'
-# import SPF_Album from 'spotify_objects.graphql'
-# import SPF_Playlist from 'spotify_objects.graphql'
-
 union SPF_SearchableItem = SPF_Track | SPF_Artist | SPF_Album | SPF_Playlist 
 
 type SPF_SearchResult {
@@ -10,15 +5,12 @@ type SPF_SearchResult {
     artist: [SPF_Search]
     album: [SPF_Search]
     playlists: [SPF_Search]
-    shows: [SPF_Search]
-    episodes: [SPF_Search]
-    audiobooks: [SPF_Search]
 }
 
 type SPF_Search {
-    limit: int!
-    offset: int!
-    total: int!
+    limit: Int!
+    offset: Int!
+    total: Int!
     next: SPF_Search
     prev: SPF_Search
     items: [SPF_SearchableItem]

@@ -1,5 +1,3 @@
-# import CountryCode from iso_enums.graphql
-
 type SPF_ExternalID {
     names: String!
     id: String!
@@ -12,8 +10,8 @@ type SPF_ExternalUrl {
 
 type SPF_Image {
     url: String!
-    width: int
-    height: int
+    width: Int
+    height: Int
 }
 
 type SPF_Copyright {
@@ -22,7 +20,7 @@ type SPF_Copyright {
 }
 
 type SPF_Track {
-    album: Album
+    album: SPF_Album
     artists: [SPF_Artist]
     markets: [CountryCode]
     disc: Int
@@ -44,20 +42,20 @@ type SPF_Track {
 
 type SPF_Artist {
     external_urls: [SPF_ExternalUrl]
-    followers: int
+    followers: Int
     genres: [String]
     href: String
     id: String
     images: [SPF_Image]
     name: String
-    popularity: int
+    popularity: Int
     type: String
     uri: String
 }
 
 type SPF_Album {
     album_type: String!
-    total_tracks: int!
+    total_tracks: Int!
     markets: [CountryCode]!
     external_urls: [SPF_ExternalUrl]!
     href: String!
@@ -69,13 +67,13 @@ type SPF_Album {
     restrictions: [String]
     type: String!
     uri: String!
-    artist: [Artist]!
-    tracks: [Songs]!
+    artist: [SPF_Artist]!
+    tracks: [SPF_Track]!
     copyrights: [SPF_Copyright]!
     external_ids: [SPF_ExternalID]!
     genres: [String]
     label: String!
-    popularity: int!
+    popularity: Int!
 }
 
 union SPF_PlaylistItem = SPF_Track | SPF_Episode
@@ -90,7 +88,7 @@ type SPF_PlaylistTrack {
 type SPF_User {
     display_name: String
     external_urls: [SPF_ExternalUrl]
-    followers: int
+    followers: Int
     href: String
     id: String
     images: [SPF_Image]
@@ -101,8 +99,8 @@ type SPF_User {
 type SPF_Playlist {
     collaborative: Boolean
     description: String
-    external_urls: [external_urls]
-    followers: int
+    external_urls: [SPF_ExternalUrl]
+    followers: Int
     href: String
     id: String
     images: [SPF_Image]
@@ -121,7 +119,7 @@ type SPF_Show {
     description: String!
     html_description: String!
     explicit: Boolean!
-    external_urls: [external_urls]!
+    external_urls: [SPF_ExternalUrl]!
     href: String!
     id: String!
     images: [SPF_Image]!
@@ -155,5 +153,4 @@ type SPF_Episode {
     uri: String!
     restrictions: [String]
     show: SPF_Show
-
 }
