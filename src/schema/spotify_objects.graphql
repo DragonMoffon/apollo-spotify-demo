@@ -77,12 +77,21 @@ type SPF_Album {
 }
 
 type SPF_PlaylistTrack {
-
+    added: String
+    by: SPF_User
+    is_local: Boolean
+    tracks: [SPF_Track | SPF_Episode]
 }
 
-type SPF_PlaylistUser {
+type SPF_User {
+    display_name: String
     external_urls: [SPF_ExternalUrl]
-    
+    followers: int
+    href: String
+    id: String
+    images: [SPF_Image]
+    type: String
+    uri: String
 }
 
 type SPF_Playlist {
@@ -94,8 +103,12 @@ type SPF_Playlist {
     id: String
     images: [SPF_Image]
     name: String
-
-
+    owner: SPF_User
+    public: Boolean
+    snapshot_id: String
+    tracks: [SPF_PlaylistTrack]
+    type: String
+    uri: String
 }
 
 type SPF_Show {
