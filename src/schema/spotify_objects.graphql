@@ -1,0 +1,156 @@
+type SPF_ExternalID {
+    names: String!
+    id: String!
+}
+
+type SPF_ExternalUrl {
+    names: String!
+    url: String!
+}
+
+type SPF_Image {
+    url: String!
+    width: Int
+    height: Int
+}
+
+type SPF_Copyright {
+    text: String
+    type: String
+}
+
+type SPF_Track {
+    album: SPF_Album
+    artists: [SPF_Artist]
+    markets: [CountryCode]
+    disc: Int
+    duration: Int
+    explicit: Boolean
+    external_ids: [SPF_ExternalID]
+    external_urls: [SPF_ExternalUrl]
+    href: String
+    id: String
+    is_playable: Boolean
+    name: String
+    popularity: Int
+    preview: String
+    number: Int
+    type: String
+    uri: String
+    is_local: Boolean
+}
+
+type SPF_Artist {
+    external_urls: [SPF_ExternalUrl]
+    followers: Int
+    genres: [String]
+    href: String
+    id: String
+    images: [SPF_Image]
+    name: String
+    popularity: Int
+    type: String
+    uri: String
+}
+
+type SPF_Album {
+    album_type: String!
+    total_tracks: Int!
+    markets: [CountryCode]!
+    external_urls: [SPF_ExternalUrl]!
+    href: String!
+    id: String!
+    images: [SPF_Image!]!
+    name: String! 
+    release: String!
+    release_specific: String!
+    restrictions: [String]
+    type: String!
+    uri: String!
+    artist: [SPF_Artist]!
+    tracks: [SPF_Track]!
+    copyrights: [SPF_Copyright]!
+    external_ids: [SPF_ExternalID]!
+    genres: [String]
+    label: String!
+    popularity: Int!
+}
+
+union SPF_PlaylistItem = SPF_Track | SPF_Episode
+
+type SPF_PlaylistTrack {
+    added: String
+    by: SPF_User
+    is_local: Boolean
+    tracks: [SPF_PlaylistItem]
+}
+
+type SPF_User {
+    display_name: String
+    external_urls: [SPF_ExternalUrl]
+    followers: Int
+    href: String
+    id: String
+    images: [SPF_Image]
+    type: String
+    uri: String
+}
+
+type SPF_Playlist {
+    collaborative: Boolean
+    description: String
+    external_urls: [SPF_ExternalUrl]
+    followers: Int
+    href: String
+    id: String
+    images: [SPF_Image]
+    name: String
+    owner: SPF_User
+    public: Boolean
+    snapshot_id: String
+    tracks: [SPF_PlaylistTrack]
+    type: String
+    uri: String
+}
+
+type SPF_Show {
+    markets: [CountryCode]!
+    copyrights: [SPF_Copyright]!
+    description: String!
+    html_description: String!
+    explicit: Boolean!
+    external_urls: [SPF_ExternalUrl]!
+    href: String!
+    id: String!
+    images: [SPF_Image]!
+    externally_hosted: Boolean!
+    languages: [LanguageCode]!
+    media_type: String!
+    name: String!
+    publisher: String!
+    type: String!
+    uri: String!
+    total_episodes: Int!
+    episodes: [SPF_Episode]!
+}
+
+type SPF_Episode {
+    preview_url: String
+    description: String!
+    html_description: String!
+    duration: Int!
+    explicit: Boolean!
+    href: String
+    id: String
+    images: [SPF_Image]!
+    externally_hosted: Boolean!
+    playable: Boolean!
+    languages: [LanguageCode]!
+    name: String!
+    release: String!
+    release_specific: String!
+    type: String!
+    uri: String!
+    restrictions: [String]
+    show: SPF_Show
+}

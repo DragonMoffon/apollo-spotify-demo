@@ -1,0 +1,4 @@
+type Query {
+    SPF_search_for_item(query: String!, types: [String]!, market: String, limit: Int, offset: Int, include_external: Boolean): SPF_SearchResult!
+}
+

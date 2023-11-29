@@ -1,0 +1,17 @@
+union SPF_SearchableItem = SPF_Track | SPF_Artist | SPF_Album | SPF_Playlist 
+
+type SPF_SearchResult {
+    tracks: [SPF_Search]
+    artist: [SPF_Search]
+    album: [SPF_Search]
+    playlists: [SPF_Search]
+}
+
+type SPF_Search {
+    limit: Int!
+    offset: Int!
+    total: Int!
+    next: SPF_Search
+    prev: SPF_Search
+    items: [SPF_SearchableItem]
+}
