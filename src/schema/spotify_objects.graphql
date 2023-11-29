@@ -1,0 +1,111 @@
+type SPF_ExternalID {
+    names: String!
+    id: String!
+}
+
+type SPF_ExternalUrl {
+    names: String!
+    url: String!
+}
+
+type SPF_Image {
+    url: String!
+    width: int!
+    height: int!
+}
+
+type SPF_Copyright {
+    text: String
+    type: String
+}
+
+type SPF_Track {
+    album: Album
+    artists: [SPF_Artist]
+    markets: [CountryCode]
+    disc: Int
+    duration: Int
+    explicit: Boolean
+    external_ids: [SPF_ExternalID]
+    external_urls: [SPF_ExternalUrl]
+    href: String
+    id: String
+    is_playable: Boolean
+    name: String
+    popularity: Int
+    preview: String
+    number: Int
+    type: String
+    uri: String
+    is_local: Boolean
+}
+
+type SPF_Artist {
+    external_urls: [SPF_ExternalUrl]
+    followers: int
+    genres: [String]
+    href: String
+    id: String
+    images: [SPF_Image]
+    name: String
+    popularity: int
+    type: String
+    uri: String
+}
+
+type SPF_Album {
+    album_type: String!
+    total_tracks: int!
+    markets: [CountryCode]!
+    external_urls: [SPF_ExternalUrl]!
+    href: String!
+    id: String!
+    images: [SPF_Image!]!
+    name: String! 
+    release: String!
+    release_specific: String!
+    restrictions: [String]
+    type: String!
+    uri: String!
+    artist: [Artist]!
+    tracks: [Songs]!
+    copyrights: [SPF_Copyright]!
+    external_ids: [SPF_ExternalID]!
+    genres: [String]
+    label: String!
+    popularity: int!
+}
+
+type SPF_PlaylistTrack {
+
+}
+
+type SPF_PlaylistUser {
+    external_urls: [SPF_ExternalUrl]
+    
+}
+
+type SPF_Playlist {
+    collaborative: Boolean
+    description: String
+    external_urls: [external_urls]
+    followers: int
+    href: String
+    id: String
+    images: [SPF_Image]
+    name: String
+
+
+}
+
+type SPF_Show {
+
+}
+
+type SPF_Episode {
+
+}
+
+type SPF_AudioBook {
+
+}

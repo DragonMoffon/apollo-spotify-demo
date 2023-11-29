@@ -1,9 +1,15 @@
+// APOLLO IMPORTS
 import { ApolloServer } from '@apollo/server'
 import { startStandaloneServer } from '@apollo/server/standalone'
-import { resolvers } from './resolvers.js'
-import { readFileSync } from 'fs'
 
-const typeDefs = readFileSync('src/spotify.graphql').toString()
+// MISC IMPORTS
+import { loadSchema } from '@graphql-tools/load'
+import { GraphQLFileLoader } from '@graphql-tools/graphql-file-loader'
+
+// INTERNAL IMPORTS
+import { resolvers } from './resolvers.js'
+
+const typeDefs = await loadSchema( './**/*.graphql',  { loaders: [new GraphQLFileLoader()]} );
 
 const server = new ApolloServer(
     {
