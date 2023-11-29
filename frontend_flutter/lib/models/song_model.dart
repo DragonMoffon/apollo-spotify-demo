@@ -8,4 +8,11 @@ class SongModel {
     required this.artist,
     required this.length,
   });
+
+  static SongModel fromMap(Map map) =>
+    SongModel(
+      title: map['title'],
+      artist: (map['artists'] as List<dynamic>).cast<String>(),
+      length: map['length'],
+    );
 }
