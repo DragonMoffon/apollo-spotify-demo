@@ -6,6 +6,8 @@
 #import SPF_Episode from 'spotify_objects.graphql'
 #import SPF_AudioBook from 'spotify_objects.graphql'
 
+union SearchableSPFObject = SPF_Track | SPF_Artist | SPF_Album | SPF_Playlist 
+
 type SPF_SearchResult {
     tracks: [SPF_TracksSearch]
     artist: [SPF_ArtistSearch]
