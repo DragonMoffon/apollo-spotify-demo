@@ -26,35 +26,33 @@ export class AccessToken {
         return Date.now() >= AccessToken.expires
     }
 
-}
-
-export async function get_access_token(){
-    try{
-        const response = await fetch(
-            "https://accounts.spotify.com/api/token",
-            {
-                method: 'POST',
-                body: new URLSearchParams({
-                    'grant_type': 'client_credentials',
-                }),
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'Authorization': 'Basic ' + (Buffer.from(service_id + ':' + service_secret).toString('base64'))
+    static async request_new_token(){
+        try{
+            const response = await fetch(
+                "https://accounts.spotify.com/api/token",
+                {
+                    method: 'POST',
+                    body: new URLSearchParams({
+                        'grant_type': 'client_credentials',
+                    }),
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Authorization': 'Basic ' + (Buffer.from(service_id + ':' + service_secret).toString('base64'))
+                    }
                 }
+            );
+        
+            if (!response.ok) {
+                console.log(response);
+                throw new error(`Error! status: ${response.status}`);
             }
-        );
-    
-        if (!response.ok) {
-            console.log(response);
-            throw new error(`Error! status: ${response.status}`);
+            const data = await response.json()
+            AccessToken.set_token(data['access_token'], Date.now() + 1000 * data['expires_in'])
+            console.log(AccessToken.get_token())
         }
-        const data = await response.json()
-        return {
-            token: data['access_token'],
-            expires: Date.now() + 1000 * data['expires_in']
-        };
+        catch (err) {
+            console.log(err)
+        }
     }
-    catch (err) {
-        console.log(err)
-    }
+
 }
