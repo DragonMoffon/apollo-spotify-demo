@@ -1,14 +1,14 @@
 type Query {
-    SPF_search_for_item(query: String!, types: [String]!, market: String, limit: Int, offset: Int, include_external: Boolean): SPF_SearchResult
+    SPF_search_for_item(query: SPF_SearchQuery!, types: [SPF_SearchableTypes]!, market: String, limit: Int, offset: Int, include_external: Boolean): SPF_SearchResult
 }
 
 union SPF_SearchableItem = SPF_Track | SPF_Artist | SPF_Album | SPF_Playlist 
 
 type SPF_SearchResult {
-    tracks: [SPF_Search]
-    artist: [SPF_Search]
-    album: [SPF_Search]
-    playlists: [SPF_Search]
+    tracks: SPF_Search
+    artist: SPF_Search
+    album: SPF_Search
+    playlists: SPF_Search
 }
 
 type SPF_Search {
@@ -18,6 +18,20 @@ type SPF_Search {
     next: SPF_Search
     prev: SPF_Search
     items: [SPF_SearchableItem]
+}
+
+input SPF_SearchQuery {
+    input: String!
+    album: String
+    artist: String
+    track: String
+}
+
+enum SPF_SearchableTypes {
+    track
+    artist
+    album
+    playlists
 }
 
 type SPF_ExternalID {
