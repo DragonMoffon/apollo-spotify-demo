@@ -1,4 +1,3 @@
-import "package:frontend_flutter/models/album_model.dart";
 import "package:frontend_flutter/models/SPF_track_model.dart";
 import "package:frontend_flutter/services/graphql_config.dart";
 import "package:graphql_flutter/graphql_flutter.dart";

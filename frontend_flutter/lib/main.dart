@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_flutter/models/SPF_track_model.dart';
-import 'package:frontend_flutter/models/album_model.dart';
 import 'package:frontend_flutter/services/graphql_service.dart';
 
 void main() {
@@ -57,31 +56,49 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            TextField(
-              onSubmitted: (text) {
-                _getTrack(text);
-              },
-              controller: textController,
-              decoration: InputDecoration(
-                border: const OutlineInputBorder(),
-                hintText: 'Search for an Album',
-                suffixIcon: IconButton(
-                  onPressed: () {
-                    _getTrack(textController.text);
-                  },
-                  icon: const Icon(
-                    Icons.search,
+        child:FractionallySizedBox(
+          widthFactor: 0.8,
+          child:Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              const Padding(padding: EdgeInsets.all(2.0)),
+              TextField(
+                onSubmitted: (text) {
+                  _getTrack(text);
+                },
+                controller: textController,
+                decoration: InputDecoration(
+                  border: const OutlineInputBorder(),
+                  hintText: 'Search for a Track',
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      _getTrack(textController.text);
+                    },
+                    icon: const Icon(
+                      Icons.search,
+                    ),
                   ),
                 ),
               ),
-            ),
-            // Text(
-            //   '${_album?[0].title} by ${_album?[0].artists[0]} ',
-            // ),
-          ],
+
+              // shows search items in a list view
+              _tracks == null
+                ? const Text('')
+                : Expanded(
+                  child: ListView.builder(
+                    itemCount: _tracks?.length,
+                    shrinkWrap: true,
+                    itemBuilder: (BuildContext context, int index) {
+                      return ListTile(
+                        leading: const Icon(Icons.music_note),
+                        title: Text('${_tracks?[index].name}'),
+                        trailing: Text('${_tracks?[index].duration}'),
+                      );
+                    },
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );
