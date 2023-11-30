@@ -2,12 +2,14 @@ import { error } from "console";
 import { service_id, service_secret } from "./secret.js"
 
 export class AccessToken {
+    static token_raw = null;
     static token = null;
     static expires = null;
 
-    static set_token(token, expires){
+    static set_token(token, expires, raw){
         AccessToken.token = token
         AccessToken.expires = expires
+        AccessToken.token_raw = raw
     }
 
     static get_token(){
@@ -16,6 +18,10 @@ export class AccessToken {
 
     static get_expiry(){
         return AccessToken.expires
+    }
+
+    static get_raw(){
+        return AccessToken.token_raw
     }
 
     static check_valid(){
@@ -47,7 +53,7 @@ export class AccessToken {
                 throw new error(`Error! status: ${response.status}`);
             }
             const data = await response.json()
-            AccessToken.set_token(data['access_token'], Date.now() + 1000 * data['expires_in'])
+            AccessToken.set_token(data['access_token'], Date.now() + 1000 * data['expires_in'], data)
             console.log(AccessToken.get_token())
         }
         catch (err) {
