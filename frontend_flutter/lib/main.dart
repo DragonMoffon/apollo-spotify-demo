@@ -44,7 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _getAlbum(title) async {
-    _album = await _graphQLService.getAlbumFromSearch(title: title);
+    // _album = await _graphQLService.getAlbumFromSearch(title: title);
     setState(() {});
   }
 
@@ -71,7 +71,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   onPressed: () {
                     _getAlbum(textController.text);
                   },
-                  icon: const Icon(Icons.search ,),
+                  icon: const Icon(
+                    Icons.search,
+                  ),
                 ),
               ),
             ),
