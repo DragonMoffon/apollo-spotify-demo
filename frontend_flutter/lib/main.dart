@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend_flutter/models/SPF_track_model.dart';
 import 'package:frontend_flutter/models/album_model.dart';
 import 'package:frontend_flutter/services/graphql_service.dart';
 
@@ -33,18 +34,18 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<AlbumModel>? _album;
+  List<SPF_TrackModel>? _tracks;
   final GraphQLService _graphQLService = GraphQLService();
   final textController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _album = null;
+    _tracks = null;
   }
 
-  void _getAlbum(title) async {
-    // _album = await _graphQLService.getAlbumFromSearch(title: title);
+  void _getTrack(title) async {
+    _tracks = await _graphQLService.getTrackFromSearch(inputTitle: title);
     setState(() {});
   }
 
@@ -61,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             TextField(
               onSubmitted: (text) {
-                _getAlbum(text);
+                _getTrack(text);
               },
               controller: textController,
               decoration: InputDecoration(
@@ -69,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 hintText: 'Search for an Album',
                 suffixIcon: IconButton(
                   onPressed: () {
-                    _getAlbum(textController.text);
+                    _getTrack(textController.text);
                   },
                   icon: const Icon(
                     Icons.search,
@@ -77,9 +78,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
             ),
-            Text(
-              '${_album?[0].title} by ${_album?[0].artists[0]} ',
-            ),
+            // Text(
+            //   '${_album?[0].title} by ${_album?[0].artists[0]} ',
+            // ),
           ],
         ),
       ),
