@@ -37,7 +37,7 @@ async function process_album(album){
         external_ids: album.external_ids,
         href: album.href,
         id: album.id,
-        images: Object.keys(album.images).map((image) => process_image(image)),
+        images: album.images.map((image) => process_image(image)),
         name: album.name,
         release: album.release_date,
         release_precision: album.release_date_precision,
