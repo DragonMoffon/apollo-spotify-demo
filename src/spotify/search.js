@@ -43,7 +43,7 @@ async function process_album(album){
         release_precision: album.release_date_precision,
         // restrictions: [album.restrictions], // unknown issue
         type: album.type,
-        artists: album.artists.map((artist) => artist.id),
+        artists_ids: album.artists.map((artist) => artist.id),
         // tracks: album.tracks.items.map((track) => track.id), // Is not included in many returns
         copyrights: album.copyrights,
         genres: album.genres,
@@ -153,7 +153,7 @@ async function resolve_SPF_search_for_item(parent, args, contextValue, info) {
     const tracks = initial_get.tracks != undefined ? await process_search_for_tracks(initial_get.tracks) : null
     const artists = initial_get.artists != undefined ? await process_search_for_artists(initial_get.artists) : null
     const albums = initial_get.albums != undefined ? await proces_search_for_albums(initial_get.albums) : null
-    
+
     return {
         tracks: tracks,
         artist: artists,
@@ -175,12 +175,15 @@ export const SPF_search_resolvers = {
     SPF_Album: {
         artists(album) {
             console.log("artist process album: " + album)
+            return album
         },
         external_urls(album) {
-            console.log("extern url process album" + albums)
+            console.log("extern url process album" + album)
+            return album
         },
         tracks(album) {
             console.log("tracks process album: " + album)
+            return album
         }
     },
     SPF_SearchableItem: {
