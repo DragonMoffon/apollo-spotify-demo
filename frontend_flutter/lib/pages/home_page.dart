@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:frontend_flutter/models/SPF_artist_model.dart';
 import 'package:frontend_flutter/models/SPF_track_model.dart';
 import 'package:frontend_flutter/services/graphql_service.dart';
 
-const List<String> searchOptions = ["track", 'artist'];
+const List<String> searchOptions = ["track", 'artist', 'album'];
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -15,6 +16,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List<SPF_TrackModel>? _tracks;
+  List<SPF_ArtistModel>? _artists;
   final GraphQLService _graphQLService = GraphQLService();
   final TextEditingController textController = TextEditingController();
   final List<bool> _toggleSearchSelection = searchOptions
@@ -25,6 +27,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     _tracks = null;
+    _artists = null;
   }
 
   // checks which search functionality to do based on search options
@@ -37,11 +40,12 @@ class _MyHomePageState extends State<MyHomePage> {
       print('Selected Search Option: $selectedOption');
 
       // run the query that satisfy the filters/ search selection
-      if (selectedOption == 'track' && selectedOption == 'artist') {
-        print("both selected");
-      } else if (selectedOption == 'track') {
+      if (selectedOption == 'track') {
         print("track selected getting tracks...");
         _getTrack(name);
+      } else if (selectedOption == 'artist') {
+        print("artist selected getting artists...");
+        _getArtist(name);
       }
     }
   }
@@ -50,6 +54,31 @@ class _MyHomePageState extends State<MyHomePage> {
   void _getTrack(String title) async {
     _tracks = await _graphQLService.getTrackFromSearch(inputTitle: title);
     setState(() {});
+  }
+
+  void _getArtist(String name) async {
+    _artists = await _graphQLService.getArtistFromSearch(inputName: name);
+    setState(() {});
+  }
+
+  // builds tracks search results
+  Widget _buildTracksListView() {
+    return Expanded(
+      child: ListView.builder(
+        itemCount: _tracks?.length,
+        shrinkWrap: true,
+        itemBuilder: (BuildContext context, int index) {
+          return Card(
+            child: ListTile(
+              leading: const Icon(Icons.music_note),
+              title: Text('${_tracks?[index].name}'),
+              subtitle: Text('${_tracks?[index].artists?[0].name}'),
+              trailing: Text('${_tracks?[index].formattedDuration}'),
+            ),
+          );
+        },
+      ),
+    );
   }
 
   @override
@@ -70,7 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 shadowColor: Colors.grey,
                 elevation: 5.0,
                 borderRadius: const BorderRadius.all(Radius.circular(20)),
-                child:TextField(
+                child: TextField(
                   onSubmitted: (text) {
                     _runSearch(text);
                   },
@@ -81,7 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       borderSide: BorderSide.none,
                     ),
                     fillColor: Colors.white,
-                    hintText: 'Search for a Track...',
+                    hintText: 'Search for a track, artist or album...',
                     suffixIcon: IconButton(
                       onPressed: () {
                         _runSearch(textController.text);
@@ -100,12 +129,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 shadowColor: Colors.grey,
                 elevation: 2.0,
                 borderRadius: const BorderRadius.all(Radius.circular(8)),
-                child:ToggleButtons(
+                child: ToggleButtons(
                   isSelected: _toggleSearchSelection,
                   onPressed: (index) {
                     setState(() {
-                      _toggleSearchSelection[index] =
-                          !_toggleSearchSelection[index];
+                      // set the button that has been selected to true, others to false
+                      for (int i = 0; i < _toggleSearchSelection.length; i++) {
+                        _toggleSearchSelection[i] = i == index;
+                      }
                     });
                   },
                   borderRadius: const BorderRadius.all(Radius.circular(8)),
@@ -121,22 +152,7 @@ class _MyHomePageState extends State<MyHomePage> {
               const Padding(padding: EdgeInsets.all(5.0)),
               // ---- Search Results ----
               // shows search items in a list view
-              _tracks == null? const Text('') : Expanded(
-                child: ListView.builder(
-                  itemCount: _tracks?.length,
-                  shrinkWrap: true,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Card(
-                      child: ListTile(
-                        leading: const Icon(Icons.music_note),
-                        title: Text('${_tracks?[index].name}'),
-                        subtitle: Text('${_tracks?[index].artists?[0].name}'),
-                        trailing: Text('${_tracks?[index].formattedDuration}'),
-                      ),
-                    );
-                  },
-                ),
-              ),
+              _tracks != null ? _buildTracksListView() : const Text('')
             ],
           ),
         ),

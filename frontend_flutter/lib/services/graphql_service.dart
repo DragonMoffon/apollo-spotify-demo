@@ -1,3 +1,4 @@
+import "package:frontend_flutter/models/SPF_artist_model.dart";
 import "package:frontend_flutter/models/SPF_track_model.dart";
 import "package:frontend_flutter/services/graphql_config.dart";
 import "package:graphql_flutter/graphql_flutter.dart";
@@ -78,44 +79,64 @@ class GraphQLService {
     }
   }
 
-  // Future<List<AlbumModel>> getAlbumFromSearch({required String title}) async {
-  //   try {
-  //     QueryResult result = await client.query(
-  //       QueryOptions(
-  //         fetchPolicy: FetchPolicy.noCache,
-  //         document: gql("""
-  //           query album(\$title: String!) {
-  //             album(title: \$title) {
-  //               title
-  //               artists
-  //               songs {
-  //                 title
-  //                 length
-  //                 artists
-  //               }
-  //             }
-  //           }
-  //         """),
-  //         variables: {"title": title},
-  //       ),
-  //     );
+  Future<List<SPF_ArtistModel>> getArtistFromSearch(
+      {required String inputName}) async {
+    try {
+      QueryResult result = await client.query(
+        QueryOptions(
+          fetchPolicy: FetchPolicy.noCache,
+          document: gql("""
+            query SPF_search_for_item(\$query: SPF_SearchQuery!, \$types: [SPF_SearchableTypes]!) {
+              SPF_search_for_item(query: \$query, types: \$types) {
+                artist {
+                  items {
+                    ... on SPF_Artist {
+                      followers
+                      href
+                      id
+                      external_urls {
+                        name
+                        url
+                      }
+                      name
+                      popularity
+                      type
+                      uri
+                      images {
+                        url
+                        width
+                        height
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          """),
+          variables: {
+            "query": {"input": inputName},
+            "types": "artist"
+          },
+        ),
+      );
 
-  //     if (result.hasException) {
-  //       throw Exception(result.exception);
-  //     }
+      print(result.toString());
+      if (result.hasException) {
+        throw Exception(result.exception);
+      }
 
-  //     /// Since it returns a jsonmap need to put it in an array.
-  //     List? res = [Map<String, dynamic>.from(result.data?['album'])];
-  //     if (res.isEmpty) {
-  //       return [];
-  //     }
+      List? res = result.data?['SPF_search_for_item']['artist']['items'];
+      print("---------------------------------");
+      print(res.toString());
+      if (res == null ||res.isEmpty) {
+        return [];
+      }
 
-  //     List<AlbumModel> album =
-  //         res.map((item) => AlbumModel.fromMap(item)).toList();
-
-  //     return album;
-  //   } catch (err) {
-  //     throw Exception(err);
-  //   }
-  // }
+      List<SPF_ArtistModel> tracks =
+          res.map((item) => SPF_ArtistModel.fromMap(item)).toList();
+      return tracks;
+    } catch (err) {
+      throw Exception(err);
+    }
+  }
 }

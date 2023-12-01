@@ -1,10 +1,10 @@
 class SPF_Image {
   final int? height;
   final int? width;
-  final String url;
+  final String? url;
 
   SPF_Image({
-    required this.url,
+    this.url,
     this.height,
     this.width,
   });
