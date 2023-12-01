@@ -1,7 +1,15 @@
+import "package:frontend_flutter/models/SPF_ExternalID.dart";
+import "package:frontend_flutter/models/SPF_ExternalUrl.dart";
+import "package:frontend_flutter/models/SPF_artist_model.dart";
+
 class SPF_TrackModel {
+  final List<SPF_ArtistModel>? artists;
   final int disc; // disc number
-  final int duration;
+  final int rawDuration; // in ms
+  final String? formattedDuration;
   final bool? explicit;
+  final List<SPF_ExternalID>? external_ids;
+  final List<SPF_ExternalURL>? external_urls;
   final String href;
   final String id;
   final bool? is_playable;
@@ -14,9 +22,13 @@ class SPF_TrackModel {
   final bool is_local;
 
   SPF_TrackModel({
+    this.artists,
     required this.disc,
-    required this.duration,
+    required this.rawDuration,
+    this.formattedDuration,
     this.explicit,
+    this.external_ids,
+    this.external_urls,
     required this.href,
     required this.id,
     this.is_playable,
@@ -29,19 +41,45 @@ class SPF_TrackModel {
     required this.is_local,
   });
 
-  static SPF_TrackModel fromMap(Map map) => SPF_TrackModel(
-        disc: map['disc'],
-        duration: map['duration'],
-        explicit: map['explicit'],
-        href: map['href'],
-        id: map['id'],
-        is_playable: map['is_playable'],
-        name: map['name'],
-        popularity: map['popularity'],
-        preview: map['preview'],
-        number: map['number'],
-        type: map['type'],
-        uri: map['uri'],
-        is_local: map['is_local'],
-      );
+  static String formatSongDuration(int milliseconds) {
+    Duration duration = Duration(milliseconds: milliseconds);
+    int minutes = duration.inMinutes;
+    int seconds = (duration.inSeconds %60);
+
+    String minutesStr = minutes.toString().padLeft(2, '0');
+    String secondsStr = seconds.toString().padLeft(2,'0');
+    return '$minutesStr:$secondsStr';
+  }
+
+  static SPF_TrackModel fromMap(Map map) {
+    List? artists = map['artists'];
+    List? externalIDs = map['external_ids'];
+    List? externalUrls = map['external_urls'];
+
+    SPF_TrackModel result = SPF_TrackModel(
+      artists:
+          artists?.map((artist) => SPF_ArtistModel.fromMap(artist)).toList(),
+      disc: map['disc'],
+      rawDuration: map['duration'],
+      formattedDuration: SPF_TrackModel.formatSongDuration(map['duration']),
+      explicit: map['explicit'],
+      external_ids: externalIDs
+          ?.map((externalID) => SPF_ExternalID.fromMap(externalID))
+          .toList(),
+      external_urls: externalUrls
+          ?.map((externalUrl) => SPF_ExternalURL.fromMap(externalUrl))
+          .toList(),
+      href: map['href'],
+      id: map['id'],
+      is_playable: map['is_playable'],
+      name: map['name'],
+      popularity: map['popularity'],
+      preview: map['preview'],
+      number: map['number'],
+      type: map['type'],
+      uri: map['uri'],
+      is_local: map['is_local'],
+    );
+    return result;
+  }
 }

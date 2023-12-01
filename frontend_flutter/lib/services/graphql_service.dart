@@ -13,29 +13,43 @@ class GraphQLService {
         QueryOptions(
           fetchPolicy: FetchPolicy.noCache,
           document: gql("""
-              query SPF_search_for_item(\$query: SPF_SearchQuery!, \$types: [SPF_SearchableTypes]!) {
-                SPF_search_for_item(query: \$query, types: \$types) {
-                  tracks {
-                    items {
-                      ... on SPF_Track {
-                        disc
-                        duration
-                        explicit
-                        href
-                        id
-                        is_local
-                        is_playable
+            query SPF_search_for_item(\$query: SPF_SearchQuery!, \$types: [SPF_SearchableTypes]!) {
+              SPF_search_for_item(query: \$query, types: \$types) {
+                tracks {
+                  items {
+                    ... on SPF_Track {
+                      artists {
                         name
-                        number
-                        popularity
-                        preview
-                        type
                         uri
+                        id
+                        href
                       }
+                      disc
+                      duration
+                      explicit
+                      external_ids {
+                        id
+                        name
+                      }
+                      external_urls {
+                        name
+                        url
+                      }
+                      href
+                      id
+                      is_playable
+                      name
+                      popularity
+                      preview
+                      number
+                      type
+                      uri
+                      is_local
                     }
                   }
                 }
               }
+            }
           """),
           variables: {
             "query": {"input": inputTitle},
@@ -50,7 +64,8 @@ class GraphQLService {
       }
 
       List? res = result.data?['SPF_search_for_item']['tracks']['items'];
-
+      // print("---------------------------------");
+      // print(res.toString());
       if (res == null ||res.isEmpty) {
         return [];
       }
