@@ -10,6 +10,8 @@ import { GraphQLFileLoader } from '@graphql-tools/graphql-file-loader'
 import { SPF_search_resolvers } from './spotify/search.js'
 import { AccessToken } from './spotify/auth.js'
 
+AccessToken.request_new_token()
+
 const typeDefs = await loadSchema( './**/compressed_schema.graphql',  { loaders: [new GraphQLFileLoader()]} );
 
 const server = new ApolloServer(
@@ -24,4 +26,3 @@ const { url } = await startStandaloneServer(server, {
 });
 
 console.log(`🚀  Server ready at: ${url}`)
-AccessToken.request_new_token()
