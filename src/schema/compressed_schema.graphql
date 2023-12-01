@@ -35,12 +35,12 @@ enum SPF_SearchableTypes {
 }
 
 type SPF_ExternalID {
-    names: String!
+    name: String!
     id: String!
 }
 
 type SPF_ExternalUrl {
-    names: String!
+    name: String!
     url: String!
 }
 
@@ -103,7 +103,7 @@ type SPF_Album {
     restrictions: [String]
     type: String!
     uri: String!
-    artist: [SPF_Artist]!
+    artists: [SPF_Artist]!
     tracks: [SPF_Track]!
     copyrights: [SPF_Copyright]!
     external_ids: [SPF_ExternalID]!

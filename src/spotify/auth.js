@@ -54,7 +54,6 @@ export class AccessToken {
             }
             const data = await response.json()
             AccessToken.set_token(data['access_token'], Date.now() + 1000 * data['expires_in'], data)
-            console.log(AccessToken.get_token())
         }
         catch (err) {
             console.log(err)
