@@ -99,7 +99,7 @@ type SPF_Album {
     images: [SPF_Image!]!
     name: String! 
     release: String!
-    release_specific: String!
+    release_precision: String!
     restrictions: [String]
     type: String!
     uri: String!

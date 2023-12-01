@@ -1,9 +1,10 @@
 import { AccessToken } from "./auth.js"
-import { search_for_item, get_several_artists, get_artist } from "./api_calls.js"
+import { search_for_item, get_several_artists, get_album } from "./api_calls.js"
 import { get } from "http"
 import { it } from "node:test"
 import { types } from "util"
 import { trace } from "console"
+import { abort } from "process"
 
 function process_external_url(name, url){
     return {
@@ -27,10 +28,33 @@ function process_image(image){
     }
 }
 
-function process_album(album){
+async function process_album(album){
     return {
-
+        album_type: album.album_type,
+        total_tracks: album.total_tracks,
+        markets: album.available_markets,
+        external_urls: album.external_urls,
+        external_ids: album.external_ids,
+        href: album.href,
+        id: album.id,
+        images: Object.keys(album.images).map((image) => process_image(image)),
+        name: album.name,
+        release: album.release_date,
+        release_precision: album.release_date_precision,
+        // restrictions: [album.restrictions], // unknown issue
+        type: album.type,
+        artists: album.artists.map((artist) => artist.id),
+        // tracks: album.tracks.items.map((track) => track.id), // Is not included in many returns
+        copyrights: album.copyrights,
+        genres: album.genres,
+        label: album.label,
+        popularity: album.popularity,
+        uri: album.uri
     }
+}
+
+async function process_album_from_simple(album){
+
 }
 
 function process_artist(artist){
@@ -47,12 +71,22 @@ function process_artist(artist){
     }
 }
 
+async function process_artist_from_simple(artist){
+
+}
+
+async function process_artists_from_simple(artists){
+
+}
 
 async function process_track(track){
     var artist_data = await get_several_artists(track.artists.map((artist) => artist.id))
     var artists = artist_data.artists.map((artist) => process_artist(artist))
+    
+    var album = await process_album(track.album)
+
     return {
-        alubms: process_album(track.album),
+        album: album,
         artists: artists,
         available_markets: track.available_markets,
         disc: track.disc_number,
@@ -100,7 +134,7 @@ async function process_search_for_artists(result){
 }
 
 async function proces_search_for_albums(result){
-    var items = await Promise.all(result.items.map(async (albums) => await process_album(album)))
+    var items = await Promise.all(result.items.map(async (album) => await process_album(album)))
     var album_search = {
         limit: result.limit,
         offset: result.offset,
@@ -114,17 +148,16 @@ async function proces_search_for_albums(result){
 }
 
 async function resolve_SPF_search_for_item(parent, args, contextValue, info) {
-    const inital_get = await search_for_item(args.query, args.types, args.market, args.limit, args.offset, args.include_external)
+    const initial_get = await search_for_item(args.query, args.types, args.market, args.limit, args.offset, args.include_external)
 
-    const tracks = inital_get.tracks != undefined ? await process_search_for_tracks(inital_get.tracks) : null
-    const artists = inital_get.artists != undefined ? await process_search_for_artists(inital_get.artists) : null
-    // const albums = initial_get.albums != undefined ? await proces_search_for_albums(inital_get.albums) : null
-    // console.log(albums)
-
+    const tracks = initial_get.tracks != undefined ? await process_search_for_tracks(initial_get.tracks) : null
+    const artists = initial_get.artists != undefined ? await process_search_for_artists(initial_get.artists) : null
+    const albums = initial_get.albums != undefined ? await proces_search_for_albums(initial_get.albums) : null
+    
     return {
         tracks: tracks,
         artist: artists,
-        album: null,
+        album: albums,
         playlists: null
     }
 }
@@ -142,6 +175,9 @@ export const SPF_search_resolvers = {
     SPF_Album: {
         artists(album) {
             console.log("artist process album: " + album)
+        },
+        external_urls(album) {
+            console.log("extern url process album" + albums)
         },
         tracks(album) {
             console.log("tracks process album: " + album)

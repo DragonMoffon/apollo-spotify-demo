@@ -57,5 +57,24 @@ export async function get_several_artists(ids){
 }
 
 export async function get_album(id){
-    
+    const full_query = id
+    try {
+        const inital_get_result = await fetch(
+            "https://api.spotify.com/v1/albums/" + full_query,
+            {
+                method: "Get",
+                headers: {
+                    "Authorization": `Bearer ${AccessToken.get_token()}`
+                }
+            }
+        );
+
+        if (!inital_get_result.ok) {
+            console.log(inital_get_result);
+        }
+        return await inital_get_result.json();
+    }
+    catch (err) {
+        console.log(err);
+    }
 } 
