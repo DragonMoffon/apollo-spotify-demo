@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend_flutter/models/SPF_album_model.dart';
 import 'package:frontend_flutter/models/SPF_artist_model.dart';
 import 'package:frontend_flutter/models/SPF_searchResults.dart';
 import 'package:frontend_flutter/models/SPF_track_model.dart';
@@ -18,6 +19,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<SPF_TrackModel>? _tracks;
   List<SPF_ArtistModel>? _artists;
+  List<SPF_AlbumModel>? _albums;
   String selectedOption = "track";
 
   final GraphQLService _graphQLService = GraphQLService();
@@ -49,6 +51,9 @@ class _MyHomePageState extends State<MyHomePage> {
       } else if (selectedOption == 'artist') {
         print("artist selected getting artists...");
         _getArtist(name);
+      } else if (selectedOption == 'album') {
+        print("album selected getting albums...");
+        _getAlbum(name);
       }
     }
   }
@@ -64,6 +69,11 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {});
   }
 
+  void _getAlbum(String title) async {
+    _albums = await _graphQLService.getAlbumFromSearch(inputName: title);
+    setState(() {});
+  }
+
   // builds tracks search results
   Widget _buildListViewResults<T extends SPF_SearchResults>(
       List<T> searchResults) {
@@ -74,7 +84,9 @@ class _MyHomePageState extends State<MyHomePage> {
         itemBuilder: (BuildContext context, int index) {
           return Card(
             child: ListTile(
-              leading: searchResults[index].getImageURL() != '' ? Image.network(searchResults[index].getImageURL()) : const Icon(Icons.music_note),
+              leading: searchResults[index].getImageURL() != ''
+                  ? Image.network(searchResults[index].getImageURL())
+                  : const Icon(Icons.music_note),
               title: Text(searchResults[index].getTitle()),
               subtitle: Text(searchResults[index].getSubtitle()),
               trailing: Text(searchResults[index].getTrailing()),
@@ -156,8 +168,10 @@ class _MyHomePageState extends State<MyHomePage> {
               _tracks != null && selectedOption == 'track'
                   ? _buildListViewResults<SPF_TrackModel>(_tracks!)
                   : _artists != null && selectedOption == 'artist'
-                    ? _buildListViewResults<SPF_ArtistModel>(_artists!)
-                    : const Text('')
+                      ? _buildListViewResults<SPF_ArtistModel>(_artists!)
+                      : _albums != null && selectedOption == 'album'
+                        ? _buildListViewResults<SPF_AlbumModel>(_albums!) 
+                        : const Text(''),
             ],
           ),
         ),

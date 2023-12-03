@@ -1,3 +1,4 @@
+import "package:frontend_flutter/models/SPF_album_model.dart";
 import "package:frontend_flutter/models/SPF_artist_model.dart";
 import "package:frontend_flutter/models/SPF_track_model.dart";
 import "package:frontend_flutter/services/graphql_config.dart";
@@ -120,21 +121,88 @@ class GraphQLService {
         ),
       );
 
-      print(result.toString());
       if (result.hasException) {
         throw Exception(result.exception);
       }
 
       List? res = result.data?['SPF_search_for_item']['artist']['items'];
-      print("---------------------------------");
-      print(res.toString());
       if (res == null ||res.isEmpty) {
         return [];
       }
 
-      List<SPF_ArtistModel> tracks =
+      List<SPF_ArtistModel> artists =
           res.map((item) => SPF_ArtistModel.fromMap(item)).toList();
-      return tracks;
+      return artists;
+    } catch (err) {
+      throw Exception(err);
+    }
+  }
+
+
+  Future<List<SPF_AlbumModel>> getAlbumFromSearch(
+      {required String inputName}) async {
+    try {
+      QueryResult result = await client.query(
+        QueryOptions(
+          fetchPolicy: FetchPolicy.noCache,
+          document: gql("""
+            query SPF_search_for_item(\$query: SPF_SearchQuery!, \$types: [SPF_SearchableTypes]!) {
+              SPF_search_for_item(query: \$query, types: \$types) {
+                album {
+                  items {
+                    ... on SPF_Album {
+                      album_type
+                      id
+                      href
+                      images {
+                        height
+                        url
+                        width
+                      }
+                      name
+                      release
+                      total_tracks
+                      type
+                      uri
+                      artists {
+                        id
+                        name
+                        uri
+                        href
+                      }
+                      external_urls {
+                        name
+                        url
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          """),
+          variables: {
+            "query": {"input": inputName},
+            "types": "album"
+          },
+        ),
+      );
+
+      if (result.hasException) {
+        throw Exception(result.exception);
+      }
+      print(result.toString());
+
+      List? res = result.data?['SPF_search_for_item']['album']['items'];
+      if (res == null ||res.isEmpty) {
+        return [];
+      }
+
+      print("---------------------------------");
+      print(res.toString());
+
+      List<SPF_AlbumModel> albums =
+          res.map((item) => SPF_AlbumModel.fromMap(item)).toList();
+      return albums;
     } catch (err) {
       throw Exception(err);
     }

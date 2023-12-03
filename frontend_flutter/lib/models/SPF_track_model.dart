@@ -47,7 +47,7 @@ class SPF_TrackModel implements SPF_SearchResults {
   String getTitle() => name;
 
   @override
-  String getSubtitle() => artists?.map((artist) => artist.name).join(",") ?? '';
+  String getSubtitle() => artists?.map((artist) => artist.name).join(", ") ?? '';
 
   @override
   String getTrailing() => formattedDuration ?? '';
