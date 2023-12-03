@@ -1,8 +1,9 @@
 import "package:frontend_flutter/models/SPF_ExternalID.dart";
 import "package:frontend_flutter/models/SPF_ExternalUrl.dart";
 import "package:frontend_flutter/models/SPF_artist_model.dart";
+import "package:frontend_flutter/models/SPF_searchResults.dart";
 
-class SPF_TrackModel {
+class SPF_TrackModel implements SPF_SearchResults {
   final List<SPF_ArtistModel>? artists;
   final int disc; // disc number
   final int rawDuration; // in ms
@@ -41,13 +42,28 @@ class SPF_TrackModel {
     required this.is_local,
   });
 
+// getters for showing track search results
+  @override
+  String getTitle() => name;
+
+  @override
+  String getSubtitle() => artists?.map((artist) => artist.name).join(",") ?? '';
+
+  @override
+  String getTrailing() => formattedDuration ?? '';
+
+  @override
+  String getImageURL() => '';
+
+
+// Formats the song duration from milliseconds to mins:seconds
   static String formatSongDuration(int milliseconds) {
     Duration duration = Duration(milliseconds: milliseconds);
     int minutes = duration.inMinutes;
-    int seconds = (duration.inSeconds %60);
+    int seconds = (duration.inSeconds % 60);
 
     String minutesStr = minutes.toString().padLeft(2, '0');
-    String secondsStr = seconds.toString().padLeft(2,'0');
+    String secondsStr = seconds.toString().padLeft(2, '0');
     return '$minutesStr:$secondsStr';
   }
 

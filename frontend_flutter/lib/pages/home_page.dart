@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_flutter/models/SPF_artist_model.dart';
+import 'package:frontend_flutter/models/SPF_searchResults.dart';
 import 'package:frontend_flutter/models/SPF_track_model.dart';
 import 'package:frontend_flutter/services/graphql_service.dart';
 
@@ -62,18 +63,19 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   // builds tracks search results
-  Widget _buildTracksListView() {
+  Widget _buildListViewResults<T extends SPF_SearchResults>(List<T> searchResults) {
     return Expanded(
       child: ListView.builder(
-        itemCount: _tracks?.length,
+        itemCount: searchResults.length,
         shrinkWrap: true,
         itemBuilder: (BuildContext context, int index) {
           return Card(
             child: ListTile(
               leading: const Icon(Icons.music_note),
-              title: Text('${_tracks?[index].name}'),
-              subtitle: Text('${_tracks?[index].artists?[0].name}'),
-              trailing: Text('${_tracks?[index].formattedDuration}'),
+              title: Text(searchResults[index].getTitle()),
+              subtitle: Text(searchResults[index].getSubtitle()),
+              trailing: Text(searchResults[index].getTrailing()),
+              isThreeLine: true,
             ),
           );
         },
@@ -152,7 +154,7 @@ class _MyHomePageState extends State<MyHomePage> {
               const Padding(padding: EdgeInsets.all(5.0)),
               // ---- Search Results ----
               // shows search items in a list view
-              _tracks != null ? _buildTracksListView() : const Text('')
+              _tracks != null ? _buildListViewResults<SPF_TrackModel>(_tracks!) : const Text('')
             ],
           ),
         ),
