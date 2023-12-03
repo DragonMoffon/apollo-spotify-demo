@@ -63,7 +63,7 @@ function process_artist(artist){
         followers: artist.followers.total,
         href: artist.href,
         id: artist.id,
-        images: Object.keys(artist.images).map((image) => process_image(image)),
+        images: artist.images.map((image) => process_image(image)),
         name: artist.name,
         popularity: artist.popularity,
         type: artist.type,
@@ -174,15 +174,15 @@ export const SPF_search_resolvers = {
     },
     SPF_Album: {
         artists(album) {
-            console.log("artist process album: " + album)
+            console.log("Processing Artist In Album")
             return album
         },
         external_urls(album) {
-            console.log("extern url process album" + album)
+            console.log("Processing External URLS in Album")
             return album
         },
         tracks(album) {
-            console.log("tracks process album: " + album)
+            console.log("processing tracks in album")
             return album
         }
     },
