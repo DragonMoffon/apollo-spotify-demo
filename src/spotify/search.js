@@ -37,14 +37,14 @@ async function process_album(album){
         external_ids: album.external_ids,
         href: album.href,
         id: album.id,
-        images: album.images.map((image) => process_image(image)),
+        images: album.images,
         name: album.name,
         release: album.release_date,
         release_precision: album.release_date_precision,
         // restrictions: [album.restrictions], // unknown issue
         type: album.type,
         artists_ids: album.artists.map((artist) => artist.id),
-        // tracks: album.tracks.items.map((track) => track.id), // Is not included in many returns
+        tracks: null, // Is not included in many returns
         copyrights: album.copyrights,
         genres: album.genres,
         label: album.label,
@@ -162,7 +162,6 @@ async function resolve_SPF_search_for_item(parent, args, contextValue, info) {
     }
 }
 
-
 export const SPF_search_resolvers = {
     Query: {
         SPF_search_for_item: resolve_SPF_search_for_item
@@ -173,17 +172,18 @@ export const SPF_search_resolvers = {
         }
     },
     SPF_Album: {
-        artists(album) {
-            console.log("Processing Artist In Album")
-            return album
+        async artists(album) {
+            const artists = await get_several_artists(album.artists_ids)
+            return artists.artists.map((artist) => process_artist(artist))
         },
         external_urls(album) {
-            console.log("Processing External URLS in Album")
-            return album
+            return Object.keys(album.external_urls).map((name) => process_external_url(name, album.external_urls[name]))
         },
         tracks(album) {
-            console.log("processing tracks in album")
-            return album
+            return []
+        },
+        images(album) {
+            return album.images.map((image) => process_image(image))
         }
     },
     SPF_SearchableItem: {
