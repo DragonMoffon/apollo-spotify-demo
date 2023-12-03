@@ -18,6 +18,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<SPF_TrackModel>? _tracks;
   List<SPF_ArtistModel>? _artists;
+  String selectedOption = "track";
+
   final GraphQLService _graphQLService = GraphQLService();
   final TextEditingController textController = TextEditingController();
   final List<bool> _toggleSearchSelection = searchOptions
@@ -37,7 +39,7 @@ class _MyHomePageState extends State<MyHomePage> {
         _toggleSearchSelection.indexWhere((isSelected) => isSelected);
 
     if (selectedIndex != -1) {
-      String selectedOption = searchOptions[selectedIndex];
+      selectedOption = searchOptions[selectedIndex];
       print('Selected Search Option: $selectedOption');
 
       // run the query that satisfy the filters/ search selection
@@ -63,7 +65,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   // builds tracks search results
-  Widget _buildListViewResults<T extends SPF_SearchResults>(List<T> searchResults) {
+  Widget _buildListViewResults<T extends SPF_SearchResults>(
+      List<T> searchResults) {
     return Expanded(
       child: ListView.builder(
         itemCount: searchResults.length,
@@ -71,7 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
         itemBuilder: (BuildContext context, int index) {
           return Card(
             child: ListTile(
-              leading: const Icon(Icons.music_note),
+              leading: searchResults[index].getImageURL() != '' ? Image.network(searchResults[index].getImageURL()) : const Icon(Icons.music_note),
               title: Text(searchResults[index].getTitle()),
               subtitle: Text(searchResults[index].getSubtitle()),
               trailing: Text(searchResults[index].getTrailing()),
@@ -86,10 +89,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      //   title: Text(widget.title),
-      // ),
       body: Center(
         child: FractionallySizedBox(
           widthFactor: 0.8,
@@ -154,7 +153,11 @@ class _MyHomePageState extends State<MyHomePage> {
               const Padding(padding: EdgeInsets.all(5.0)),
               // ---- Search Results ----
               // shows search items in a list view
-              _tracks != null ? _buildListViewResults<SPF_TrackModel>(_tracks!) : const Text('')
+              _tracks != null && selectedOption == 'track'
+                  ? _buildListViewResults<SPF_TrackModel>(_tracks!)
+                  : _artists != null && selectedOption == 'artist'
+                    ? _buildListViewResults<SPF_ArtistModel>(_artists!)
+                    : const Text('')
             ],
           ),
         ),

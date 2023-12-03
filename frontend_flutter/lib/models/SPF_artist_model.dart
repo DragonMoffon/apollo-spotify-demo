@@ -1,7 +1,8 @@
 import "package:frontend_flutter/models/SPF_ExternalUrl.dart";
 import "package:frontend_flutter/models/SPF_image.dart";
+import "package:frontend_flutter/models/SPF_searchResults.dart";
 
-class SPF_ArtistModel {
+class SPF_ArtistModel implements SPF_SearchResults {
   final List<SPF_ExternalURL>? external_urls;
   final int? followers;
   final List<String>? genres;
@@ -25,6 +26,21 @@ class SPF_ArtistModel {
     this.type,
     required this.uri,
   });
+
+  // getters for showing artist search results
+  @override
+  String getTitle() => name;
+
+  @override
+  String getSubtitle() => '';
+
+  @override
+  String getTrailing() => followers.toString();
+
+ @override // gets 3rd image url since its the smaller one
+  String getImageURL() => images?.isNotEmpty == true ? images![2].url ?? '' : '';
+
+
 
   static SPF_ArtistModel fromMap(Map map) {
     List? externalURLs = map['external_urls'];
