@@ -85,7 +85,13 @@ class _MyHomePageState extends State<MyHomePage> {
           return Card(
             child: ListTile(
               leading: searchResults[index].getImageURL() != ''
-                  ? Image.network(searchResults[index].getImageURL())
+                  ? ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: SizedBox.fromSize(
+                        size: const Size.square(50),
+                        child: Image.network(searchResults[index].getImageURL(), fit: BoxFit.cover),
+                      ),
+                    )
                   : const Icon(Icons.music_note),
               title: Text(searchResults[index].getTitle()),
               subtitle: Text(searchResults[index].getSubtitle()),
@@ -170,8 +176,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   : _artists != null && selectedOption == 'artist'
                       ? _buildListViewResults<SPF_ArtistModel>(_artists!)
                       : _albums != null && selectedOption == 'album'
-                        ? _buildListViewResults<SPF_AlbumModel>(_albums!) 
-                        : const Text(''),
+                          ? _buildListViewResults<SPF_AlbumModel>(_albums!)
+                          : const Text(''),
             ],
           ),
         ),

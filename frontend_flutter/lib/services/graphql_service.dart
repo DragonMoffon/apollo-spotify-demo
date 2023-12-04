@@ -190,15 +190,11 @@ class GraphQLService {
       if (result.hasException) {
         throw Exception(result.exception);
       }
-      print(result.toString());
 
       List? res = result.data?['SPF_search_for_item']['album']['items'];
       if (res == null ||res.isEmpty) {
         return [];
       }
-
-      print("---------------------------------");
-      print(res.toString());
 
       List<SPF_AlbumModel> albums =
           res.map((item) => SPF_AlbumModel.fromMap(item)).toList();
