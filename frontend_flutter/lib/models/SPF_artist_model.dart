@@ -35,12 +35,23 @@ class SPF_ArtistModel implements SPF_SearchResults {
   String getSubtitle() => '';
 
   @override
-  String getTrailing() => '$followers follolwers';
+  String getTrailing()=>'${formatFollowersNumber()} followers';
 
  @override // gets 3rd image url since its the smaller one
   String getImageURL() => images?.isNotEmpty == true ? images![2].url ?? '' : '';
 
-
+  // Formats the followers number into millions, thousands, hundreds/tens
+  String formatFollowersNumber(){
+    if (followers! >= 1000000) {
+      double result = followers! / 1000000.0;
+      return "${result.toStringAsFixed(1)} million";
+    } else if (followers! >= 1000) {
+      double result = followers! / 1000.0;
+      return "${result.toStringAsFixed(1)} thousand";
+    } else {
+      return followers.toString();
+    }
+  }
 
   static SPF_ArtistModel fromMap(Map map) {
     List? externalURLs = map['external_urls'];
