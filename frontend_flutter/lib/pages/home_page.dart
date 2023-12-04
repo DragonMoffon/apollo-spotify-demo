@@ -25,7 +25,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final GraphQLService _graphQLService = GraphQLService();
   final TextEditingController textController = TextEditingController();
   final List<bool> _toggleSearchSelection = searchOptions
-      .map((e) => e == "track")
+      .map((option) => option == "track")
       .toList(); // map out default search selection states
 
   @override
@@ -42,17 +42,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
     if (selectedIndex != -1) {
       selectedOption = searchOptions[selectedIndex];
-      print('Selected Search Option: $selectedOption');
 
       // run the query that satisfy the filters/ search selection
       if (selectedOption == 'track') {
-        print("track selected getting tracks...");
         _getTrack(name);
       } else if (selectedOption == 'artist') {
-        print("artist selected getting artists...");
         _getArtist(name);
       } else if (selectedOption == 'album') {
-        print("album selected getting albums...");
         _getAlbum(name);
       }
     }
