@@ -4,7 +4,8 @@
     "@graphql-tools/graphql-file-loader": "^8.0.0",
     "@graphql-tools/load": "^8.0.1",
     "create-npm": "^1.5.0",
-    "graphql": "^16.8.1"
+    "graphql": "^16.8.1",
+    "nodemon": "^3.0.1"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",

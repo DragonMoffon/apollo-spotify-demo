@@ -1,0 +1,12 @@
+{
+    "configurations": [
+        {
+            "name": "Flutter",
+            "type": "dart",
+            "request": "launch",
+            "program": "frontend_flutter/lib/main.dart",
+            "flutterMode": "debug",
+            "toolArgs": ["--web-port=8080", "--web-hostname=127.0.0.1"]
+        }
+    ]
+}
