@@ -1,10 +1,12 @@
 import "package:frontend_flutter/models/SPF_ExternalID.dart";
 import "package:frontend_flutter/models/SPF_ExternalUrl.dart";
+import "package:frontend_flutter/models/SPF_album_model.dart";
 import "package:frontend_flutter/models/SPF_artist_model.dart";
 import "package:frontend_flutter/models/SPF_searchResults.dart";
 
 class SPF_TrackModel implements SPF_SearchResults {
   final List<SPF_ArtistModel>? artists;
+  final List<SPF_AlbumModel>? album;
   final int disc; // disc number
   final int rawDuration; // in ms
   final String? formattedDuration;
@@ -24,6 +26,7 @@ class SPF_TrackModel implements SPF_SearchResults {
 
   SPF_TrackModel({
     this.artists,
+    this.album,
     required this.disc,
     required this.rawDuration,
     this.formattedDuration,
@@ -47,14 +50,14 @@ class SPF_TrackModel implements SPF_SearchResults {
   String getTitle() => name;
 
   @override
-  String getSubtitle() => artists?.map((artist) => artist.name).join(", ") ?? '';
+  String getSubtitle() =>
+      artists?.map((artist) => artist.name).join(", ") ?? '';
 
   @override
   String getTrailing() => formattedDuration ?? '';
 
   @override
-  String getImageURL() => '';
-
+  String getImageURL() => album?[0].images?[2].url ?? '';
 
 // Formats the song duration from milliseconds to mins:seconds
   static String formatSongDuration(int milliseconds) {
@@ -71,10 +74,12 @@ class SPF_TrackModel implements SPF_SearchResults {
     List? artists = map['artists'];
     List? externalIDs = map['external_ids'];
     List? externalUrls = map['external_urls'];
+    List? album = [map['album']];
 
     SPF_TrackModel result = SPF_TrackModel(
       artists:
           artists?.map((artist) => SPF_ArtistModel.fromMap(artist)).toList(),
+      album: album?.map((map) => SPF_AlbumModel.fromMap(map)).toList(),
       disc: map['disc'],
       rawDuration: map['duration'],
       formattedDuration: SPF_TrackModel.formatSongDuration(map['duration']),

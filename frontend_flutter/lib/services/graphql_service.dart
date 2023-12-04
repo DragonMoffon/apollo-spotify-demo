@@ -20,6 +20,16 @@ class GraphQLService {
                 tracks {
                   items {
                     ... on SPF_Track {
+                       album {
+                        href
+                        id
+                        name
+                        images {
+                          width
+                          url
+                          height
+                        }
+                      }
                       artists {
                         name
                         uri

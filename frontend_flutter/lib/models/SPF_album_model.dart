@@ -4,13 +4,13 @@ import "package:frontend_flutter/models/SPF_image.dart";
 import "package:frontend_flutter/models/SPF_searchResults.dart";
 
 class SPF_AlbumModel implements SPF_SearchResults {
-  final String album_type;
-  final int total_tracks;
+  final String? album_type;
+  final int? total_tracks;
   final String href;
   final String id;
   final List<SPF_Image>? images;
   final String name;
-  final String release;
+  final String? release;
   final String? type;
   final List<SPF_ArtistModel>? artists;
   final List<SPF_ExternalID>? external_ids;
