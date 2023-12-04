@@ -35,7 +35,7 @@ class SPF_ArtistModel implements SPF_SearchResults {
   String getSubtitle() => '';
 
   @override
-  String getTrailing() => followers.toString();
+  String getTrailing() => '$followers follolwers';
 
  @override // gets 3rd image url since its the smaller one
   String getImageURL() => images?.isNotEmpty == true ? images![2].url ?? '' : '';
